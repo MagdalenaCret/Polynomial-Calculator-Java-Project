@@ -6,7 +6,7 @@ These operations must be performed using code implemented in Java, and the resul
 
 <div align="center">
   <p>
-    <img src="presentation.jpg" width="500" alt="Presentation"/>
+    <img src="presentation.png" width="500" alt="Presentation"/>
   </p>
 </div>
 
