@@ -1,0 +1,599 @@
+\documentclass[a4paper,12pt]{article}
+
+% character encoding
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,romanian]{babel}
+\usepackage{enumitem}
+\usepackage{polynom}
+\usepackage{diffcoeff}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\usepackage{listings, xcolor}
+\lstset{
+tabsize = 4, %% set tab space width
+showstringspaces = false, %% prevent space marking in strings, string is defined as the text that is generally printed directly to the console
+numbers = left, %% display line numbers on the left
+commentstyle = \color{green}, %% set comment color
+keywordstyle = \color{blue}, %% set keyword color
+stringstyle = \color{red}, %% set string color
+rulecolor = \color{black}, %% set frame color to avoid being affected by text color
+basicstyle = \small \ttfamily , %% set listing font and size
+breaklines = true, %% enable line breaking
+numberstyle = \tiny,
+}
+% adjust the page margins
+\usepackage[scale=0.8]{geometry}
+
+% no indent
+\usepackage{parskip}
+
+\usepackage{hyperref}
+
+\newlist{toc}{enumerate}{10}
+\setlist[toc]{label*=\arabic*.}
+
+\begin{document}
+\begin{center}
+\large Universitatea Tehnică din Cluj-Napoca \\
+\large Facultatea de Automatică și Calculatoare \\
+\vspace{1 cm}
+
+\Huge\textbf{DOCUMENTAȚIE}\hfill \\
+\vspace{0.5 cm}
+\Large TEMA NUMĂRUL 1\\
+\vspace{1cm}
+\end{center}
+
+\begin{center}
+\large Nume student: Maria-Magdalena Creț
+\end{center}
+\begin{center}
+\large Grupa 30223
+\end{center}
+
+\newpage
+\vspace{3cm}
+\tableofcontents
+
+
+\newpage
+\vspace{3cm}
+\section{Obiectivul temei}
+Obiectivul principal a acestei teme este acela de a se proiecta și implementa un calculator care rezolvă operațiile de polinoame cu o interfata grafică realizată cu GUI care permite utilizatorului să introducă polinoame, respectiv să se selecteze operația matematica dorită pentru acestea. Operațiile sunt: adunare, scădere, inmulțire și impărțire, iar pentru un singur polinom se găsesc și operațiile de derivare și integrare. Acestea trebuie efectuate pe baza codului implementat în Java, iar rezultatul pentru fiecare dintre operațiile menționate mai sus trebuie să apară pe ecran, în interfața grafică realizată. Pentru implementarea interfeței grafice există posibilitatea alegerii între Java Swing sau JavaFX.
+
+Cerința acestei teme este următoarea:
+
+• Utilizați un design de programare orientat pe obiecte (utilizați încapsularea, definiți clase adecvate: de exemplu, Polinom și, opțional, Monomial).
+
+• Utilizați Map pentru modelarea polinomului.
+
+• Folosiți foreach în loc de for(int i=0…).
+
+• Implementați o interfață grafică cu utilizatorul, utilizând Java Swing sau JavaFX.
+
+• Implementați operațiile pentru polinoame (operații menționate mai sus)
+
+• Implementați clase cu maximum 300 de linii (cu excepția claselor UI) și metode cu maxim 30 de linii.
+
+• Utilizați convențiile de denumire Java.
+
+• Documentație de bună calitate care se adresează tuturor secțiunilor din documentație șablon.
+
+• Bună organizare a codului sursă.
+
+• Folosiți expresii regulate și potrivirea modelului pentru extragerea coeficiențiilor polinomului
+
+• Utilizați Junit pentru testare
+
+\subsection{Obiectivele secundare ale acestei teme sunt:}
+
+\begin{enumerate}
+        \item Asigurarea unei interfețe grafice prietenoase și ușor de folosit pentru utilizator, care să permită introducerea și vizualizarea polinoamelor într-un mod ușor și intuitiv. Acest lucru realizându-se după modelul MVC (Model View Controller).
+        \item Implementarea operațiilor matematice pentru polinoame într-un mod eficient astfel încât să se ofere o performanță bună a aplicației, indiferent de numărul de monoame a polinoamelor introduse sau de gradul acestora.
+        \item Realizarea claselor necesare funcționării calculatorului de polinoame. 
+        \item Realizarea unei bune organizări a codului, a claselor, pentru a putea face ca acest cod sa fie cât mai ușor și accesibil de reutilizat sau modificat în caz de nevoie
+        \item Documentarea temei, redarea informațiilor corespunzătoarea realizării acesteia, pentru ca aplicație sa fie cât mai ușor de înteles și utilizat de orice persoană.
+        \item Folosirea expresiilor regulate (Regular Expression) și a potrivirii modelului (Pattern matching) pentru extragerea coeficienților și a puterii fiecărui monom din polinoame. Înțeledera acestor Regular Expression și învățarea utilizării lor.
+\end{enumerate}
+\vspace{0.5 cm}
+\section{Analiza problemei, modelare, scenarii, cazuri de utilizare}
+
+\subsection{Analiza problemei și cum se realizează operațiile matematice pe polinoame}
+
+Se vor reprezenta mai jos operațiile cerute pe polinoame din punct de vedere matematic pentru a putea înțelege mai ușor cum se realizează acestea ulterior în cod.
+
+\begin{align}
+ \item 1. Adunarea a doua polinoame:
+\end{align}
+ \newline
+  \newline
+ Pentru două polinoame de forma:
+   \newline
+  \newline
+ $ P1(x) = 3x^3 + 2x^2 + 5x - 1 $
+ \newline
+ $ P2(x) = 6x^2 + 2x + 3 $
+ \newline
+   \newline
+ Operația de adunare se realizează în următorul mod:
+   \newline
+Idee: Termenii de același grad se adună, urmând a se aduna apoi la polinomul rezultat, termenii lăsați liberi.
+  \newline
+   \newline
+Se va obține pentru cele două polinoame de mai sus:
+  \newline
+ $ P(x) = (3x^3 + 2x^2 + 5x - 1) + (6x^2 + 2x + 3) $
+ \newline
+ $ P(x) = 3x^3 + (2x^2 + 6x^2) + (5x + 2x) - 1 + 3 $
+ \newline
+ $ P(x) = 3x^3 + (2x^2 + 6x^2) + (5x + 2x) - 1 + 3 $
+ \newline
+ \Rightarrow  $ P(x) = 3x^3 + 8x^2 + 7x + 2 $
+ \newline
+ 
+\begin{align}
+ \item 2. Scăderea a doua polinoame:
+\end{align}
+ \newline
+  \newline
+ Pentru două polinoame de forma:
+   \newline
+  \newline
+ $ P1(x) = 3x^3 + 2x^2 + 5x - 1 $
+ \newline
+ $ P2(x) = 6x^2 + 2x + 3 $
+ \newline
+   \newline
+ Operația de scădere se realizează în următorul mod:
+   \newline
+Termenii de același grad se scad, urmând a se scadea apoi la polinomul rezultat, termenii lăsați liberi. Este adunarea primului polinom cu cel de-al doilea cu semn schimbat. (Așa cum se va observa implementarea în cod pentru a refolosi codul de la metoda de adunarea a polinoamelor). 
+  \newline
+   \newline
+Se va obține pentru cele două polinoame de mai sus:
+  \newline
+  \newline
+ $ P(x) = (3x^3 + 2x^2 + 5x - 1) - (6x^2 + 2x + 3) $
+ \newline
+ \Rightarrow  $ P(x) = 3x^3 - 4x^2 + 3x - 4 $
+ \newline
+ 
+\begin{align}
+ \item 3. Înmulțirea a doua polinoame:
+\end{align}
+ \newline
+  \newline
+ Pentru două polinoame de forma:
+   \newline
+  \newline
+ $ P1(x) = 2x^2 + 3 $
+ \newline
+ $ P2(x) = 3x - 1 $
+ \newline
+   \newline
+ Operația de înmulțire se realizează în următorul mod:
+   \newline
+Idee: Se înmulțește termen cu termen. 
+  \newline
+   \newline
+Se va obține pentru cele două polinoame de mai sus:
+  \newline
+  \newline
+ $ P(x) = (2x^2 + 3) * (3x - 1) $
+ \newline
+ \Rightarrow  $ P(x) = 6x^3 - 2x^2 + 9x - 3 $
+ \newline
+
+\begin{align}
+ \item 4. Împărțirea a doua polinoame:
+\end{align}
+ \newline
+  \newline
+ Pentru două polinoame de forma:
+   \newline
+  \newline
+ $ P1(x) = 2x^2 + x + 2 $
+ \newline
+ $ P2(x) = 3x - 1 $
+ \newline
+   \newline
+ Operația de împărțire se realizează în următorul mod:
+   \newline
+Observație: După schema lui Horner.
+  \newline
+   \newline
+Se va obține pentru cele două polinoame de mai sus:
+  \newline
+  \newline
+  \Rightarrow 
+  \polylongdiv[]{2x^2 + x + 2}{3x - 1}
+   \newline
+   \newline
+   
+\begin{align}
+ \item 5. Derivarea unui polinom:
+\end{align}
+ \newline
+  \newline
+  Pentru un polinom de forma:
+  \newline
+  \newline
+   $ P(x) = 4x^4 + 2x^3 + 2x - 5 $
+   \newline
+   \newline
+   Idee: Coeficientul fiecarui monom se va înmulți cu gradul monomul, scăzându-se ulterior gradul fiecarui monom din dericare, cu 1. Termenii considerati constante(monom de grad 0) vor fi 0, adică se elimină din polinomul rezultat.
+   \newline
+   \[ P’(x)=\diff{P(x)}x \] 
+   \Rightarrow $ P’(x) = 16x^3 + 6x^2 + 2 $
+ \newline
+
+   \begin{align}
+ \item 5. Integrarea unui polinom:
+\end{align}
+ \newline
+  \newline
+  Pentru un polinom de forma:
+  \newline
+  \newline
+   $ P(x) = 2x^3 + 3x^2 + 2x - 5 $
+   \newline
+   \newline
+   Idee: Coeficientul fiecarui monom se va împărți cu gradul monomul la care se adauga 1. Se actualizeaza apoi gradul monomului cu +1. Termenii considerati constante(monom de grad 0) vor avea la integrare gradul egal cu 1. 
+   \newline
+   \newline
+   \Rightarrow 
+   \[ \int (2x^3 + 3x^2 + 2x - 5 )\,dx \] = \frac{2}{4}x^4 +\frac{3}{3}x^3 - 5x + C = \frac{1}{2}x^4 +x^3 - 5x + C
+ \newline
+ \newline
+ 
+\subsection{Modelarea problemei pentru scrierea codului Java}
+Din definiția matematică înțelegem că un polinom constituie o expresie construită dintr-una sau mai multe variabile și constante.Fiecare polinom este realizat dintr-unul sau mai multe monoame (putem considera astfel că am împărțit acest polinom în blocuri componente pentru a ușura realizarea operațiilor)
+Calculatorul va functiona cu polinoame într-o singură variabilă (o considerăm variabila x), ca de exemplu : $x^2+5x-7$. Nu se vor realiza operații pe polinoame cu mai multe variabile, ca de exemplu : $x^4+5xyz+2z - 1$.
+Exponentul unei variabile dintr-un monom este egal cu gradul acelei variabile in acel monom.
+
+ \newline
+ Așadar pentru a simplifica rezolvarea problemei și pentru a crea o structură cât mai ușor de analizat, unde se pot realiza într-un mod accesibil și rapid modificări, s-a ales organizarea codului Java în pachete(packages): 
+ \begin{itemize}
+ \item polynomial calculator package: 
+ se integreaza clasele care conțin implementarea codului. Clasele sunt: 
+ \begin{itemize}
+  \item Polynomial , care conține constructori pentru un obiect de tipul Polynomial și metoda toString() pentru afișarea unui obiect de tipul Polynomial sub formă de string;
+   \item Monom, o clasă în care s-a realizat metoda toString() pentru fiecare dintre monoamele pe care le conține un polinom, pentru a ușura realizarea codului; 
+   \item PolynomialOperation, clasa în care s-au realizat operațiile matematice cerute pentru polinoame;
+    \item PolynomialRead, clasa în care s-a implementat metoda readPolynomial, care primește un polinom introdus de la tastatura de tipul String și din care, cu ajutorul utilizării unor Regular Expression (regex) se extrage coeficientul și gradul unui monom, se seteaza apoi monomul respectiv și se introduce într-un polinom pentru a se putea realiza operațiile pe acesta;
+\end{itemize}
+\item PolynomialCalculatorGUI: se poate considera ca fiind un pachet pentru că acesta conține clasa PolynomialCalculatorGUI, unde s-a implementat codul pentru design-ul aplicației, dar este de fapt, mai mult de atât, un Swing UI Design. Pentru interfața grafică s-a ales implementarea cu Java Swing.
+\end{itemize}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{Screenshot 2024-03-17 012426.png}
+    \caption{Diagramă pentru crearea unui model(plan), pentru realizarea interfeței grafice corespunzătoare temei curente}
+    \label{fig:enter-label}
+\end{figure}
+
+\textbf{Observații suplimentare:}
+ \newline
+  \newline
+În scrierea monoamelor nu s-a folosit simbolul “*” care ar fi putut înseamna înmultire, ci coeficientul o să fie lipit de x, iar puterea o să fie reprezentată prin simbolul “\verb|^|”,având următoarea structură: (de exemplu) 2x\verb|^|3+x-3
+La rularea programul se va deschide o interfață grafică în care se vor putea realiza următorii pași: 
+\begin{enumerate}
+        \item Se va tasta primul polinom în field-ul “Polynomial1” (de la tastatură);
+        \item Se va tasta al doilea polinom în field-ul “Polynomial2” (de la tastatură);
+        \item Pentru a efectua operația dorită, se accesează unul dintre butoanele care activează operația respectivă, iar în field-ul “Result” o sa obtinem rezultatul efectiv. În field-ul acesta nu se poate tasta nimic. S-au realizat constrângeri pentru introducerea datelor( de exemplu nu se pot introduce în field-uri altfel de date, în afară de “.” sau numere de la 0 la 9, variabila “x” și simbolul “\verb|^|”. Acest lucra realizându-se pe baza unui regex utilizat în metoda verifyInput().
+        \item Se poate repeta acest proces ori de câte ori se dorește, iar la finalizarea procesului se poate inchidem interfața grafică prin apasarea tastei X din dreptul ferestrei sus. Aceasta fereastră se poate mări sau micșora după preferințe. Conține un titlu și un aspect prietenos utilizatorului.
+\end{enumerate)
+
+\section{Proiectare}
+\begin{center}
+\includegraphics[width=0.40\linewidth]{Screenshot 2024-03-18 122705.png}
+\end{center}
+\begin{center}
+    \caption{Figura 2: Diagrama Use-Case}
+\end{center}
+
+\begin{center}
+\includegraphics[width=1\linewidth]{DiagramaClaseTEMA1.png}
+\end{center}
+\begin{center}
+    \caption{Figura 3: Diagrama UML pentru clase}
+\end{center}
+\vspace{1cm}
+\section{Implementare}
+
+Implementarea codului s-a realizat structural, pe baza a 4 pachete: exception\verb|_|package, polynomial\verb|_|calculator, test\verb|_|junit\verb|_|polynomial și pachetul de Swing UI Designer: PolynomialCalculatorGUI, este singurul la care nu se respectă convenția de nume pentru pachetele Java(litere mici și spații pentru despărțirea între cuvinte), deoarece acesta conține o clasa în care se realizeaza partea de UI Design, cu același nume.
+\newline
+Pachetele sunt structurate altfel:
+\begin{enumerate}
+\item Pachetul exception\verb|_|package conține o clasa ExceptionDivide, care extinde superclasa Throwable, pentru toate erorile și excepțiile limbajului Java.  Această clasă conține un constructor super(), pentru a putea transmite un mesaj atunci când are loc excepția.
+\item Pachetul polynomial\verb|_|calculator, poate fi considerat și cel mai important sau pachetul principal al proiectului, deoarece el conține toate clasele care realizeaza operațiile pe polinoame, cât și celelalte metode importante, ajutătoare. Clasele din acest pachet sunt: \emph{Monom}, \emph{Polynomial}, \emph{PolynomialOperation} și clasa \emph{PolynomialRead}. Mai jos se vor găsi explicații pentru fiecare dintre clasele menționate anterior.
+\item Pachetul test\verb|_|junit\verb|_|polynomial, acesta conține clasa de teste unitare, \emph{TestJunitP}, unde se realizează testele unitare pentru majoritatea operațiilor realizate pe polinoame(in special, pentru operațiile matematice cerute)
+\item \emph{PolynomialCalculatorGUI} este pachetul care conține o clasă cu același nume, unde se implementează codul din limbajul Java cu Swing pentru crearea interfeței grafice a aplicației.
+\newline
+\newline
+\end{enumerate}
+Clasele sunt cele numite mai sus, iar informațiile importante despre acestea sunt următoarele:
+\begin{enumerate}
+\item Clasa \emph{Monom}: conține argumentele necesare reprezentării unui monom \emph{grad} și \emph{coeficient}, un constructor fără argumente utilizat în clasa Polynomial spre exemplu, gettere(returnează argumentele) și setere(seteaza valoarea argumentelor), acestea ne permit să preluam dintr-un monom al unui polinom gradul și coeficientul și, respectiv, să le modificăm în funcție de cerințele proiectului. În această clasă, o metodă foarte importantă este toString(), care permite scrierea pe ecran a monomului sub forma unui String(sau șir de caractere), pentru a fi ușor de vizualizat de utilizator. S-au introdus în acestă metodă simboluri  precum *, care reprezintă înmulțirea.
+\newline
+\begin{lstlisting}[language = Java]
+package polynomial_calculator_package;
+
+public class Monom implements Comparable<Monom>{
+    private double coefficient;
+    private int degree;
+
+    public Monom() {
+        this.coefficient = 0.0;
+        this.degree = 0;
+    }
+    public double getCoefficient() {
+        return coefficient;
+    }
+    public void setCoefficient(double coefficient) {
+        this.coefficient = coefficient;
+    }
+    ..........................................................
+    
+        public String toString() {
+        if(this.coefficient == 1)
+        {
+            return getToStringForCoefficient1();
+        }
+        else if(this.coefficient > 0) {
+            return getToStringForCoefficient2();
+        }
+        else if(this.coefficient == -1){
+            return getToStringForCoefficient3();
+        }
+        else if(this.coefficient < 0){
+            return getToStringForCoefficient4();
+        }
+        else {
+            return 0 + "";
+        }
+    }
+}
+\end{lstlisting}
+
+
+\item Clasa \emph{Polynomial}: conține o mapă de monoame \emph{private Map<Integer, Monom> monoame = new TreeMap<Integer, Monom>(Collections.reverseOrder());}. S-a ales această variantă de mapă pentru ca stocarea monoamelor se se realizez în ordine crescătoare(sortate) după grad.
+De asemenea această clasă, conține metoda toString(), suprascrisă (@Override), pentru a putea afișa pe ecran(în fereastra aplicației), un polinom sub forma de String.
+Se mai găsește si metoda addMonom, care ne permite să inserăm într-un polinom nou creat, instanțiat de clasa POlynomial, un monom, cu gradul și coeficientul său. Acest monom se adaugă în mapa de monoame a unui polinom, folosind gradului monomul și cheie. Valorile monomului pot fi considerați coeficienții.
+\newline
+\begin{lstlisting}[language = Java]
+ public void addMonom(Monom monom) {
+        monoame.put(monom.getDegree(), monom); 
+    }
+\end{lstlisting}
+\newline
+\item Clasa \emph{PolynomialOperation}: Aici se realizează operațiile pe polinoame, operațiile care sunt cele de adunare, scădere, înmulțire și împărțire. Pentru un singur polinom, ales pentru interfața grafică ca fiind primul (Polynomial1), se realizează și operațiile de derivare și integrare.
+\newline
+Exemplu de operații:
+\newline
+Operația de Adunare a doua polinoame: 
+\newline
+\emph{Observație! Scăderea s-a realizat apelând operația de adunare, dar cel de-al doilea polinom s-a înmulțit cu -1, astfel că s-a reutilizat codul, scăpând de doua metode redundante.}
+\newline
+\begin{lstlisting}[language = Java]
+public class PolynomialOperation {
+    public static Polynomial addPolynomial(Polynomial polynomial1, Polynomial polynomial2) {
+        Polynomial polynomial3 = new Polynomial();
+        for (int degree : polynomial1.getMonoame().keySet()) {
+            Monom monom = new Monom();
+            Double coefficientPoly1 = polynomial1.getMonoame().get(degree).getCoefficient();
+            Double coefficientPoly3 = 0.0;
+            if (polynomial2.getMonoame().containsKey(degree)) {
+                coefficientPoly3 = coefficientPoly1 + polynomial2.getMonoame().get(degree).getCoefficient();
+            } else {
+                coefficientPoly3 = coefficientPoly1;
+            }
+            if (coefficientPoly3 != 0.0) {
+                monom.setCoefficient(coefficientPoly3);
+                monom.setDegree(degree);
+                polynomial3.addMonom(monom);
+            }
+        }
+        for (int degree : polynomial2.getMonoame().keySet()) {
+            Monom monom = new Monom();
+            if (polynomial1.getMonoame().containsKey(degree) == false) {
+                monom.setCoefficient(polynomial2.getMonoame().get(degree).getCoefficient());
+                monom.setDegree(polynomial2.getMonoame().get(degree).getDegree());
+                polynomial3.addMonom(monom);
+            }
+        }
+        return polynomial3;
+    }
+\end{lstlisting}
+\newline
+Operațiile de Derivare și Integrare pentru un singur polinom:
+\newline
+La integrare, constanta C a fost scrisă în metoda \emph{actionPerformed} din clasa interfeței GUI, odată cu crearea butonului pentru această operație. O posibilă îmbunătățire ar fi aceea ca la integrare să se returneze direct un String, acest lucru realizându-se prin convertirea tipului de date Polinom, la String, prin metoda suprascrisă toString() și să se returneze direct un String de forma: \emph{return polynomialCopy + "+C"}. Însă s-a păstrat prima varianta, polinomul se convertește în String doar în clasa GUI, din motivul că se poate dori folosirea acestui rezultat de la integrală sub forma \emph{Polynomial}.
+\newline
+\begin{lstlisting}[language = Java]
+    public static Polynomial derivativePolynomial(Polynomial polynomial){
+
+        Polynomial polynomialCopy = new Polynomial();
+        for(int degree:polynomial.getMonoame().keySet()){
+            Monom monom = new Monom();
+            monom.setDegree(degree-1);
+            Double degreeCopy = monom.getDegree()*0.1;
+            monom.setCoefficient(polynomial.getMonoame().get(degree).getCoefficient()*degree);
+            polynomialCopy.addMonom(monom);
+        }
+        return polynomialCopy;
+    }
+    public static Polynomial integratePolynomial(Polynomial polynomial){
+
+        Polynomial polynomialCopy = new Polynomial();
+        for(int degree:polynomial.getMonoame().keySet()){
+            Monom monom = new Monom();
+            monom.setDegree(degree+1);
+            monom.setCoefficient(polynomial.getMonoame().get(degree).getCoefficient()/(degree+1.0));
+            polynomialCopy.addMonom(monom);
+        }
+        return polynomialCopy;
+    }
+\end{lstlisting}
+\newline
+\item Clasa \emph{PolynomialRead}: În acestă clasă se găsește metoda readPolynomial, care primește inputul sub forma String introdus de la tastatură în program și îl modifică, parsând astfel, cu ajutorul unui regex, tot ce este în fața lui x, coeficientului de tipul Double, iar tot ce este după simbol de putere este considerat grad, fiind de tipul int. Acest regex utilizat simplifică foarte mult secționarea caraterelor și atribuirea lor diverselor argumente (în acest caz, grad și coeficient). Se atribuie treptat în funcție de caractere, valori gradelor și argumentelor unui monom (se seteaza cu setterele realizate în clasa Monom), urmând ca monomul realizat să fie introdus într-un polinom nou inițializat. Condiția de oprire este cea din while, pe baza Matcher-ului \emph{matcher.find()}, când această conditie este nulă, înseamnă că am ajuns la finalul Stringului dat ca input și s-a completat polinomul cu toate monoamele respective. Clasa Matcher în Java face parte din pachetul java.util.regex și funcționează în colaborare cu clasa Pattern pentru operațiuni de potrivire a modelului pe text folosind expresii regulate.
+\newline
+\begin{lstlisting}[language = Java]
+public class PolynomialRead {
+    private static final String CONST_REGEX =   "([\\+-]?[1-9]*(\\.[0-9][0-9]*)?x\\^-?[2-9]+)|([\\+-]?[1-9]*(\\.[0-9][0-9]*)?x)|([\\+-]?[0-9]+(\\.[0-9][0-9]*)?)";
+    public static Polynomial readPolynomial(String inputPolynomial){
+        final Pattern pattern = Pattern.compile(CONST_REGEX, Pattern.MULTILINE);
+        final Matcher matcher = pattern.matcher(inputPolynomial);
+        Polynomial polynomial = new Polynomial();
+        while (matcher.find()) {
+            String groupPoly = matcher.group(0);
+            Monom monomPoly = new Monom();
+            Double coefficient = 0.0;
+            Integer degree = 0;
+            if(groupPoly.contains("x")) {
+                coefficient = getCoefficient(groupPoly);
+                if(groupPoly.contains("^")){
+                    degree = Integer.parseInt(groupPoly.substring(groupPoly.indexOf("x") + 2));
+                }
+                else{
+                    degree = 1;
+                }
+            }
+            else{
+                 coefficient = Double.parseDouble((groupPoly));
+                 degree = 0;
+            }
+            monomPoly.setCoefficient(coefficient);
+            monomPoly.setDegree(degree);
+            polynomial.addMonom(monomPoly);
+        }
+        return polynomial;
+    }
+\end{lstlisting}
+\newline
+\item Clasa \emph{TestJunitP}: se vor menționa la \emph{Rezultate} caracteristicile acestei clase.
+\item Clasa \emph{PolynomialCalculatorGUI}: 
+S-a realizat o interfață grafică prietenoasă, în nuanțe verzi, ușor de utilizat. Are doua field-uri pentru introducerea celor doua polinoame și un field pentru afișarea rezultatului operației dorite. Sunt 6 butoane pentru selecția operației dorite. 
+S-au implementat doua metode: verifyInput, care verifică ce caractere s-au introdus și pe baza unui regex, în cazul în care s-au introdus caractere invalide se va afișa o eroare pe fereastră cu mesajul respectiv. S-a implementat și o metodă pentru verificarea field-ului gol, în cazul în care se introduce un polinom într-un field, iar în cel de-al doilea field nu se introduce niciun polinom se va afișa de astfel un mesaj de eroare pe ecran.
+De asemenea pentru cazurile speciale la împărțire \emph{împărțirea la 0} și \emph{împărțirea la un polinom cu un grad mai mare decât însuși deîmpărțitul}, se afișează mesaje de eroare pe ecran. Odată ce se afișează un mesaj de eroare pentru un input greșit, field-ul în care s-a introdus inputul greșit se curăță automat, iar field-ul de result, cu rezultat operației realizate anterior (dacă s-a realizat vreo operație), se curăță de asemenea.
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{Screenshot 2024-03-21 080523.png}
+\end{center}
+\begin{center}
+    \caption{Figura 4: Interfața grafică pentru calculatorul de polinoame}
+\end{center}
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{Screenshot 2024-03-21 080538.png}
+\end{center}
+\begin{center}
+    \caption{Figura 5: Afișarea unei eroare pentru introducerea caracterelor invalide}
+\end{center}
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{Screenshot 2024-03-21 080547.png}
+\end{center}
+\begin{center}
+    \caption{Figura 6: Afișarea unei eroare pentru field gol}
+\end{center}
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{Screenshot 2024-03-21 080609.png}
+\end{center}
+\begin{center}
+    \caption{Figura 7: Afișarea unui rezultat pentru operația de scădere între două polinoame}
+\end{center}
+
+
+\end{enumerate}
+\vspace{2cm}
+\section{Rezultate}
+Rezultatele se afisează în ultimul JTextField din interfață \emph{resultTextField}. Pe baza informațiilor primite în câmpurile \emph{Polynomial1} și \emph{Polynomia2} se creează polinoamele, cu ajutorul metodei de citit String-urile introduse de la tastatatură \emph{readPolynomial}. La apăsarea unui buton denumit după operația matematică dorită se realizează operația corespunzătoare, rezultatul fiind observat în căsuța de \emph{Result}. S-a creat o metodă specială (verifyInput), care verifică dacă s-au introdus altfel de date, în afară de cele corecte pentru citirea polinomul (caractere precum litere, altele în afară de x, simboluri necorespunzătoare, introducerea a mai multor semne operaționale fără logică), cât și o metodă care să verifice dacă s-a introdus un polinom în cele doua căsuțe odată cu apăsarea butonului de operație. Se afișeaza mesaje de eroare în fereastră în oricare din cazuri. 
+Exemplu:
+\newline
+Un input este de forma:  2x\verb|^|3+x-3, iar rezultatul care se va afișa este sub forma: c1*x\verb|^|p1+c2*x\verb|^|p2+...+a, unde c1, c2,... sunt considerați coeficienți, iar p1, p2,... grade/puteri ale monoamelor, a este monomul de grad 0. S-au ales la afișare parantezele ( ) pentru cazul în care se dorește introducere unor puteri negative, la afișare se vor observa mai ușor de către utilizator. 
+\newline
+Sub reprezentarea matematică un polinom arată de forma: 
+\newline
+\begin{center}
+$ P(x) = a_nx^n+\ldots+a_1x+a_0 $ 
+\end{center}
+\newline
+S-a creat o clasă de testare unitară Java, Clasa \emph{TestJunitP}: În această clasă s-au implementat teste unitare pentru metodele create anterior în celelalte clase. S-a folosit Junit, fiind cea mai populară metodă de teste unitare pentru Java, unde sunt folosite dependențe Maven, adăugate în fișierul pom.xml. 
+Exemplu:
+\newline
+\begin{lstlisting}[language = Java]
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-engine</artifactId>
+    <version>5.9.2</version>
+    <scope>test</scope>
+</dependency>
+\end{lstlisting}
+\newline
+S-au utilizat adnotări corespunzătoare modului de afișare și de realizare a testelor dorit:
+\newline{
+@AfterEach – denotes that the annotated method will be executed after each test method (previously @After)
+@BeforeAll – denotes that the annotated method will be executed before all test methods in the current class (previously @BeforeClass)
+@AfterClass)
+}
+\newline
+De asemenea s-au utilizat aserții (assertions), care sunt utilizate pentru a verifica premisele corectitudinii codului în timpul dezvoltării și testării. Acestea permit programatorilor să introducă expresii care trebuie să fie adevărate într-o anumită etapă a programului și să genereze o excepție în cazul în care aceste premise nu sunt îndeplinite.
+\newline
+Exemplu de test cu Junit:
+Exemplu de test pentru adunare. S-au introdus doua polinoame, s-a inițializat rezultatul așteptat, iar pe baza metodei din clasa PolynomialOperation s-a obtinut rezultatul, care după verificare s-a constat că este la fel, deci testul s-a realizat cu SUCCES.
+\newline
+\begin{lstlisting}[language = Java]
+        @org.junit.Test
+        public void testAddNumber1() throws ExceptionDivide {
+            System.out.print("Test Number 1 for Add Operation:\n");
+
+            Polynomial polynomial1 =  PolynomialRead.readPolynomial("6x^4+3x^2-5x-8");
+            Polynomial polynomial2 =  PolynomialRead.readPolynomial("2x^-2+5x-6");
+
+            Polynomial waitingResult = PolynomialRead.readPolynomial("6x^4+3x^2+2x^-2-14");
+            Polynomial obtainedResult = PolynomialOperation.addPolynomial(polynomial1,polynomial2);
+
+            boolean testVerify = obtainedResult.toString().equals(waitingResult.toString());
+            Assert.assertTrue(testVerify);
+            numberOfTestsSuccess = numberOfTestsSuccess + 1;
+        }
+    }
+\end{lstlisting}
+\newline
+La final pe baza adnotării @AfterClass și pe baza unei metode implementate s-a afișat un mesaj care conține numărul de teste încercate și numărul de teste realizate cu succes.
+\newline
+\emph{---They were executed X tests of which Y
+tests successfully---}
+\vspace{1cm}
+\section{Concluzii}
+În cele din urmă, se poate spune că, deși, crearea unui aplicației pentru un calculator de polinoame poate părea la prima vedere o sarcină complicată, prin utilizarea tehnicilor de programare orientate pe Obiect, se poate obține o aplicație eficientă și utilă (mai ales când ne putem referi la o categorie de persoane care nu știu să rezolve corect operațiile pe polinoame, precum niște elevi de liceu pentru care subiectul este la început de predare și au nevoie de un mod constant de verificare sau validare a calculelor).
+\newline
+Se mai poate spune că este o aplicație utilă pentru o categorie largă de persoane, astfel că atât elevii de liceu, cât și studenții de la universitățiile de inginerie sau matematică pot apela la ajutorul acesteie pentru a calcula operațiile dorite. Totodată pentru un student la Calculatoare este un start în ceea ce înseamna proiectarea unui design cât mai corect, înțelegerea unor principii de programare și învățarea scrierii unui cod cât mai corect cu putință.
+\newline
+Utilizarea unui system de build precum Maven, în utilizarea arhitecturii MVC, dezvolta o aplicație ușor de menținut.
+\newline
+\newline
+Îmbunătățiri ulterioare pot fi:
+\begin{itemize}
+\item Adăugarea de funcționalități suplimentare: extinderea funcționalității  aplicației prin adăugarea de operații suplimentare cu polinoame, cum ar fi: cel mai mare divizor comun a două polinoame, cel mai mic multiplu comun a două polinoame, evaluarea într-un punct dat sau găsirea rădăcinilor.
+\item Interfață grafică îmbunătățită: pentru a fi mai intuitivă și ușor de utilizat. Adăugarea unor opțiuni de personalizare, cum ar fi selectarea culorilor temei, prezența unor butoane cu cifre pentru a face diferită introducerea polinomului (de data aceasta, nu numai de la tastatură).
+\item O testare mai riguroasă a aplicației pe un număr mai mare de cazuri.
+\item O posibilă îmbunătățire priviind organizarea codului.
+\end{itemize}
+
+\newpage
+\section{Bibliografie (Webografie)}
+\begin{enumerate}
+\item Cursuri OOP Anul2, Semestrul 1
+\item https://dsrl.eu/courses/pt/materials/lectures/
+\item https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/Polynomial.java.html
+\item https://stackoverflow.com
+\item https://regex101.com/
+\item https://www.overleaf.com/learn/latex
+\item https://libguides.eur.nl/overleaf/lists-tables-images-labelling
+\end{enumerate}
+
+\end{document}
